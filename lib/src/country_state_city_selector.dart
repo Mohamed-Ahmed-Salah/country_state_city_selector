@@ -432,7 +432,7 @@ class _CountryStateCitySelectorState extends State<CountryStateCitySelector> {
           },
           child: _buildBox(
             selectedCountry?["name"] ?? widget.countryHintText,
-            widget.verticalPadding,
+            widget.verticalPadding - 4,
             emoji: selectedCountry?["emoji"],
           ),
         ),
