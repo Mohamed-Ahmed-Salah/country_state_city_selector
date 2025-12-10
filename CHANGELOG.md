@@ -1,3 +1,5 @@
+[1.0.6] - 2025-12-10 
+- Fixed a bug
 
 [1.0.5] - 2025-12-10 
 - Updated widget to include Vertical Padding, so user can customize widget height
