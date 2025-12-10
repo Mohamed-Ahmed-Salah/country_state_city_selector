@@ -59,6 +59,9 @@ class CountryStateCitySelector extends StatefulWidget {
 
     // default country
     this.defaultCountry,
+
+    // vertical Padding
+    this.verticalPadding = 12,
   });
 
   // Optional selection callback
@@ -112,6 +115,7 @@ class CountryStateCitySelector extends StatefulWidget {
   // Default Dountry
   final String? defaultCountry;
 
+  final double verticalPadding;
   @override
   State<CountryStateCitySelector> createState() => _CountryStateCitySelectorState();
 }
@@ -130,7 +134,9 @@ class _CountryStateCitySelectorState extends State<CountryStateCitySelector> {
   }
 
   Future<void> loadCountryData() async {
-    final String jsonString = await rootBundle.loadString('packages/country_state_city_selector/assets/countries.json');
+    final String jsonString = await rootBundle.loadString(
+      'packages/country_state_city_selector/assets/countries.json',
+    );
 
     final List<dynamic> jsonList = jsonDecode(jsonString);
 
@@ -143,11 +149,14 @@ class _CountryStateCitySelectorState extends State<CountryStateCitySelector> {
         selectedCountry =
             countries
                 .firstWhere(
-                  (c) => (c["name"] as String).toLowerCase() == widget.initialCountry!.toLowerCase(),
+                  (c) =>
+                      (c["name"] as String).toLowerCase() == widget.initialCountry!.toLowerCase(),
                   orElse: () => {},
                 )
                 .isNotEmpty
-            ? countries.firstWhere((c) => (c["name"] as String).toLowerCase() == widget.initialCountry!.toLowerCase())
+            ? countries.firstWhere(
+                (c) => (c["name"] as String).toLowerCase() == widget.initialCountry!.toLowerCase(),
+              )
             : null;
       }
 
@@ -156,11 +165,14 @@ class _CountryStateCitySelectorState extends State<CountryStateCitySelector> {
         selectedCountry =
             countries
                 .firstWhere(
-                  (c) => (c["name"] as String).toLowerCase() == widget.defaultCountry!.toLowerCase(),
+                  (c) =>
+                      (c["name"] as String).toLowerCase() == widget.defaultCountry!.toLowerCase(),
                   orElse: () => {},
                 )
                 .isNotEmpty
-            ? countries.firstWhere((c) => (c["name"] as String).toLowerCase() == widget.defaultCountry!.toLowerCase())
+            ? countries.firstWhere(
+                (c) => (c["name"] as String).toLowerCase() == widget.defaultCountry!.toLowerCase(),
+              )
             : null;
       }
 
@@ -178,17 +190,25 @@ class _CountryStateCitySelectorState extends State<CountryStateCitySelector> {
       //  Step 4: Prefill city (only if initialCity is provided + valid)
       if (selectedCountry != null && selectedState != null && widget.initialCity != null) {
         final states = selectedCountry!["states"] as List<dynamic>;
-        final stateObj = states.firstWhere((s) => s["name"].toLowerCase() == selectedState!.toLowerCase());
+        final stateObj = states.firstWhere(
+          (s) => s["name"].toLowerCase() == selectedState!.toLowerCase(),
+        );
         final cities = stateObj["cities"] as List<dynamic>;
 
-        final cityExists = cities.any((c) => (c["name"] as String).toLowerCase() == widget.initialCity!.toLowerCase());
+        final cityExists = cities.any(
+          (c) => (c["name"] as String).toLowerCase() == widget.initialCity!.toLowerCase(),
+        );
         if (cityExists) {
           selectedCity = widget.initialCity;
         }
       }
 
       //  Step 5: Trigger callbacks (for prefilled/default values)
-      widget.onSelectionChanged(selectedCountry?["name"] ?? '', selectedState ?? '', selectedCity ?? '');
+      widget.onSelectionChanged(
+        selectedCountry?["name"] ?? '',
+        selectedState ?? '',
+        selectedCity ?? '',
+      );
 
       if (selectedCountry != null) widget.onCountryChanged?.call(selectedCountry!["name"]);
       if (selectedState != null) widget.onStateChanged?.call(selectedState!);
@@ -222,7 +242,10 @@ class _CountryStateCitySelectorState extends State<CountryStateCitySelector> {
                   margin: const EdgeInsets.only(top: 8, bottom: 12),
                   width: 50,
                   height: 5,
-                  decoration: BoxDecoration(color: Colors.grey[400], borderRadius: BorderRadius.circular(10)),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[400],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
 
                 // Title
@@ -297,7 +320,8 @@ class _CountryStateCitySelectorState extends State<CountryStateCitySelector> {
 
                       final bool isSelected;
                       if (item is Map<String, dynamic>) {
-                        isSelected = selectedCountry != null && selectedCountry!["name"] == displayText;
+                        isSelected =
+                            selectedCountry != null && selectedCountry!["name"] == displayText;
                       } else {
                         // For state or city items
                         isSelected =
@@ -307,7 +331,8 @@ class _CountryStateCitySelectorState extends State<CountryStateCitySelector> {
 
                       final row = Row(
                         children: [
-                          if (emoji != null) Text(emoji, style: TextStyle(fontSize: widget.pickerItemFontSize)),
+                          if (emoji != null)
+                            Text(emoji, style: TextStyle(fontSize: widget.pickerItemFontSize)),
                           if (emoji != null) const SizedBox(width: 10),
                           Expanded(
                             child: Text(
@@ -315,7 +340,9 @@ class _CountryStateCitySelectorState extends State<CountryStateCitySelector> {
                               style: TextStyle(
                                 fontSize: widget.pickerItemFontSize,
                                 fontWeight: widget.pickerItemFontWeight,
-                                color: isSelected ? widget.selectedTextColor : widget.pickerItemTextColor,
+                                color: isSelected
+                                    ? widget.selectedTextColor
+                                    : widget.pickerItemTextColor,
                               ),
                             ),
                           ),
@@ -395,11 +422,19 @@ class _CountryStateCitySelectorState extends State<CountryStateCitySelector> {
                 });
 
                 widget.onCountryChanged?.call(selectedCountry?["name"] ?? '');
-                widget.onSelectionChanged.call(selectedCountry?["name"] ?? '', selectedState ?? '', selectedCity ?? '');
+                widget.onSelectionChanged.call(
+                  selectedCountry?["name"] ?? '',
+                  selectedState ?? '',
+                  selectedCity ?? '',
+                );
               },
             );
           },
-          child: _buildBox(selectedCountry?["name"] ?? widget.countryHintText, 6, emoji: selectedCountry?["emoji"]),
+          child: _buildBox(
+            selectedCountry?["name"] ?? widget.countryHintText,
+            widget.verticalPadding,
+            emoji: selectedCountry?["emoji"],
+          ),
         ),
 
         const SizedBox(height: 20),
@@ -439,7 +474,7 @@ class _CountryStateCitySelectorState extends State<CountryStateCitySelector> {
               );
             }
           },
-          child: _buildBox(selectedState ?? widget.stateHintText, 8),
+          child: _buildBox(selectedState ?? widget.stateHintText, widget.verticalPadding),
         ),
         const SizedBox(height: 20),
 
@@ -459,7 +494,9 @@ class _CountryStateCitySelectorState extends State<CountryStateCitySelector> {
               final states = selectedCountry!["states"] as List<dynamic>;
               final stateObj = states.firstWhere((s) => s["name"] == selectedState);
 
-              final cities = (stateObj["cities"] as List<dynamic>).map((c) => c["name"] as String).toList();
+              final cities = (stateObj["cities"] as List<dynamic>)
+                  .map((c) => c["name"] as String)
+                  .toList();
 
               showPicker<String>(
                 context: context,
@@ -480,16 +517,16 @@ class _CountryStateCitySelectorState extends State<CountryStateCitySelector> {
               );
             }
           },
-          child: _buildBox(selectedCity ?? widget.cityHintText, 8),
+          child: _buildBox(selectedCity ?? widget.cityHintText, widget.verticalPadding),
         ),
       ],
     );
   }
 
   // Picker TextFields
-  Widget _buildBox(String text, double vertPadding, {String? emoji}) {
+  Widget _buildBox(String text, double verticalPadding, {String? emoji}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: vertPadding),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: verticalPadding),
       margin: const EdgeInsets.only(top: 6),
       decoration: BoxDecoration(
         color: widget.fillColor,
