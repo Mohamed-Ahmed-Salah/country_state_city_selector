@@ -253,173 +253,176 @@ class _CountryStateCitySelectorState extends State<CountryStateCitySelector> {
 
     final content = StatefulBuilder(
       builder: (context, setState) {
-        return FractionallySizedBox(
-          heightFactor: 0.7,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              color: widget.modalBackgroundColor,
-              // uses customizable modal background
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-            ),
-            child: Column(
-              children: [
-                // Drag handle
-                Container(
-                  margin: const EdgeInsets.only(top: 8, bottom: 12),
-                  width: 50,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[400],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+        return Material(
+          color: Colors.transparent,
+          child: FractionallySizedBox(
+            heightFactor: 0.7,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                color: widget.modalBackgroundColor,
+                // uses customizable modal background
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
                 ),
-
-                // Title
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: widget.modalTitleFontSize,
-                      fontWeight: widget.modalTitleFontWeight,
-                      color: widget.modalTitleColor,
+              ),
+              child: Column(
+                children: [
+                  // Drag handle
+                  Container(
+                    margin: const EdgeInsets.only(top: 8, bottom: 12),
+                    width: 50,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[400],
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                ),
 
-                // Search box
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: (Platform.isIOS || Platform.isMacOS) && !kIsWeb
-                      ? CupertinoSearchTextField(
-                    placeholder: hintText ?? "Search and $title",
-                    onChanged: (value) {
-                      setState(() {
-                        filteredItems = items.where((item) {
-                          if (item is Map<String, dynamic>) {
-                            return item["name"].toLowerCase().contains(
-                              value.toLowerCase(),
-                            );
-                          } else if (item is String) {
-                            return item.toLowerCase().contains(
-                              value.toLowerCase(),
-                            );
-                          }
-                          return false;
-                        }).toList();
-                      });
-                    },
-                  )
-                      : TextField(
-                    decoration: InputDecoration(
-                      hintText: hintText ?? "Search and $title",
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
+                  // Title
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: widget.modalTitleFontSize,
+                        fontWeight: widget.modalTitleFontWeight,
+                        color: widget.modalTitleColor,
                       ),
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        filteredItems = items.where((item) {
-                          if (item is Map<String, dynamic>) {
-                            return item["name"].toLowerCase().contains(
-                              value.toLowerCase(),
-                            );
-                          } else if (item is String) {
-                            return item.toLowerCase().contains(
-                              value.toLowerCase(),
-                            );
-                          }
-                          return false;
-                        }).toList();
-                      });
-                    },
                   ),
-                ),
-                const SizedBox(height: 8),
 
-                // List of items
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: filteredItems.length,
-                    itemBuilder: (context, index) {
-                      final item = filteredItems[index];
-                      String displayText;
-                      String? emoji;
-
-                      if (item is Map<String, dynamic>) {
-                        displayText = item["name"];
-                        emoji = item["emoji"];
-                      } else {
-                        displayText = item.toString();
-                      }
-
-                      final bool isSelected;
-                      if (item is Map<String, dynamic>) {
-                        isSelected =
-                            selectedCountry != null &&
-                                selectedCountry!["name"] == displayText;
-                      } else {
-                        // For state or city items
-                        isSelected =
-                            (selectedState != null &&
-                                selectedState == displayText) ||
-                                (selectedCity != null &&
-                                    selectedCity == displayText);
-                      }
-
-                      final row = Row(
-                        children: [
-                          if (emoji != null)
-                            Text(
-                              emoji,
-                              style: TextStyle(
-                                fontSize: widget.pickerItemFontSize,
-                              ),
-                            ),
-                          if (emoji != null) const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              displayText,
-                              style: TextStyle(
-                                fontSize: widget.pickerItemFontSize,
-                                fontWeight: widget.pickerItemFontWeight,
-                                color: isSelected
-                                    ? widget.selectedTextColor
-                                    : widget.pickerItemTextColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-
-                      return (Platform.isIOS || Platform.isMacOS) &&
-                          !kIsWeb
-                          ? CupertinoButton(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 12,
+                  // Search box
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: (Platform.isIOS || Platform.isMacOS) && !kIsWeb
+                        ? CupertinoSearchTextField(
+                      placeholder: hintText ?? "Search and $title",
+                      onChanged: (value) {
+                        setState(() {
+                          filteredItems = items.where((item) {
+                            if (item is Map<String, dynamic>) {
+                              return item["name"].toLowerCase().contains(
+                                value.toLowerCase(),
+                              );
+                            } else if (item is String) {
+                              return item.toLowerCase().contains(
+                                value.toLowerCase(),
+                              );
+                            }
+                            return false;
+                          }).toList();
+                        });
+                      },
+                    )
+                        : TextField(
+                      decoration: InputDecoration(
+                        hintText: hintText ?? "Search and $title",
+                        prefixIcon: const Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        onPressed: () {
-                          onSelected(item);
-                          Navigator.pop(context);
-                        },
-                        child: row,
-                      )
-                          : ListTile(
-                        title: row,
-                        onTap: () {
-                          onSelected(item);
-                          Navigator.pop(context);
-                        },
-                      );
-                    },
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          filteredItems = items.where((item) {
+                            if (item is Map<String, dynamic>) {
+                              return item["name"].toLowerCase().contains(
+                                value.toLowerCase(),
+                              );
+                            } else if (item is String) {
+                              return item.toLowerCase().contains(
+                                value.toLowerCase(),
+                              );
+                            }
+                            return false;
+                          }).toList();
+                        });
+                      },
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+
+                  // List of items
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: filteredItems.length,
+                      itemBuilder: (context, index) {
+                        final item = filteredItems[index];
+                        String displayText;
+                        String? emoji;
+
+                        if (item is Map<String, dynamic>) {
+                          displayText = item["name"];
+                          emoji = item["emoji"];
+                        } else {
+                          displayText = item.toString();
+                        }
+
+                        final bool isSelected;
+                        if (item is Map<String, dynamic>) {
+                          isSelected =
+                              selectedCountry != null &&
+                                  selectedCountry!["name"] == displayText;
+                        } else {
+                          // For state or city items
+                          isSelected =
+                              (selectedState != null &&
+                                  selectedState == displayText) ||
+                                  (selectedCity != null &&
+                                      selectedCity == displayText);
+                        }
+
+                        final row = Row(
+                          children: [
+                            if (emoji != null)
+                              Text(
+                                emoji,
+                                style: TextStyle(
+                                  fontSize: widget.pickerItemFontSize,
+                                ),
+                              ),
+                            if (emoji != null) const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                displayText,
+                                style: TextStyle(
+                                  fontSize: widget.pickerItemFontSize,
+                                  fontWeight: widget.pickerItemFontWeight,
+                                  color: isSelected
+                                      ? widget.selectedTextColor
+                                      : widget.pickerItemTextColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+
+                        return (Platform.isIOS || Platform.isMacOS) &&
+                            !kIsWeb
+                            ? CupertinoButton(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 12,
+                          ),
+                          onPressed: () {
+                            onSelected(item);
+                            Navigator.pop(context);
+                          },
+                          child: row,
+                        )
+                            : ListTile(
+                          title: row,
+                          onTap: () {
+                            onSelected(item);
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
